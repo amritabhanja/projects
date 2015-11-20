@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[62]:
+# In[4]:
 
 from pylab import *
 import matplotlib.pyplot as plt
@@ -17,7 +17,7 @@ def load_data():
     from sklearn.cross_validation import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(x, y,test_size=10)
     #print(X_train)
-    return (X_train,X_test,y_train,y_test)
+    return (x,y,X_train,X_test,y_train,y_test)
 
 def plot_model(w,D,ax):
     s = asarray(linspace(0,1,100))
@@ -55,6 +55,18 @@ def fourier_features1(x,D):
     F = concatenate((temp,F),1)
     F=F.T
     return(F)
+def fourier_features_data(x,D):
+    X=[]
+    for i in range(1,D+1):
+        X.extend((cos(2*pi*x*i),sin(2*pi*x*i)))
+    F=asarray(X)
+    F.shape=(len(X),30)
+    F=F.T
+    temp = shape(F)
+    temp = ones((temp[0],1))
+    F = concatenate((temp,F),1)
+    F=F.T
+    return(F)
 
 def plot_mses(mses1,mses2,deg):
     f,ax = plt.subplots(1,facecolor = 'white')
@@ -69,7 +81,7 @@ def plot_mses(mses1,mses2,deg):
 
 
 def main():
-    X_train,X_test,y_train,y_test = load_data()
+    x,y,X_train,X_test,y_train,y_test = load_data()
     deg = array([1,2,3,4,5,6,7,8])
     f,axs = plt.subplots(2,4,facecolor = 'white')
     for i in range(0,4):
@@ -114,12 +126,12 @@ def main():
     a=mses_test.index(min(mses_test))
     show()
     print(a)
-    plt.scatter(X_train,y_train, s = 30,color = 'b')
+    plt.scatter(x,y, s = 30)
     s = 'D = ' + str(deg[a])
     plt.suptitle(s,fontsize=15)
-    plt.scatter(X_test,y_test, s = 30,color = 'y')
-    F_train = fourier_features(X_train,deg[a])
-    w_train = dot(linalg.pinv(dot(F_train,F_train.T)),dot(F_train,y_train))
+    #plt.scatter(X_test,y_test, s = 30,color = 'y')
+    F = fourier_features_data(x,deg[a])
+    w = dot(linalg.pinv(dot(F,F.T)),dot(F,y))
     if a<3:
         n=0
         m=a
@@ -130,10 +142,10 @@ def main():
     s.shape = (size(s),1)
     f = []
     for m in range(1,deg[a]+1):
-        f.append(w_train[2*m-1]*cos(2*pi*m*s))
-        f.append(w_train[2*m]*sin(2*pi*m*s))
+        f.append(w[2*m-1]*cos(2*pi*m*s))
+        f.append(w[2*m]*sin(2*pi*m*s))
     f = asarray(f)
-    f = sum(f,axis = 0) + w_train[0]
+    f = sum(f,axis = 0) + w[0]
     plt.plot(s,f,'-r', linewidth = 2)
     
    
