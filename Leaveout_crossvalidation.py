@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[6]:
+# In[10]:
 
 from pylab import *
 import matplotlib.pyplot as plt
@@ -58,7 +58,7 @@ def plot_mses(mses1,mses2,deg):
     ax.xaxis.set_ticks(deg)
     ax.plot(deg,mses2)
     ax.xaxis.set_ticks(deg)
-    ax.set_ylim(0,2)
+    ax.set_ylim(0,0.05)
     ax.set_xlabel('$D$',fontsize=20,labelpad = 10)
     ax.set_ylabel('$MSE $',fontsize=20,rotation = 0,labelpad = 20)
 
@@ -104,10 +104,15 @@ def main():
                 n = 1
                 m = D - 3
             plot_model(w_train,deg[D],axs[n,m])
-        mses_test_final = list(np.array(mses_test_final) + np.array(mses_test))
-        mses_train_final = list(np.array(mses_train_final) + np.array(mses_train))
+        mses_test_final = (list(np.array(mses_test_final) + np.array(mses_test)))
+        myInt = 6
+        mses_test_final[:] = [x / myInt for x in mses_test_final]
+        mses_train_final = (list(np.array(mses_train_final) + np.array(mses_train)))
+        mses_train_final[:] = [x / myInt for x in mses_train_final]
 
     plot_mses(mses_train_final,mses_test_final,deg)
+    
+
     a=mses_test.index(min(mses_test))
     show()
     print(a)
