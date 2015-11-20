@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[10]:
+# In[19]:
 
 from pylab import *
 import matplotlib.pyplot as plt
@@ -116,10 +116,10 @@ def main():
     a=mses_test.index(min(mses_test))
     show()
     print(a)
-    plt.scatter(X_train,y_train, s = 30,color = 'b')
+    plt.scatter(x,y, s = 30)
     s = 'D = ' + str(deg[a])
     plt.suptitle(s,fontsize=15)
-    plt.scatter(X_test,y_test, s = 30,color = 'y')
+    #plt.scatter(X_test,y_test, s = 30,color = 'y')
     F_train = poly_features(X_train,deg[a])
     w_train = dot(linalg.pinv(dot(F_train,F_train.T)),dot(F_train,y_train))
     if a<2:
