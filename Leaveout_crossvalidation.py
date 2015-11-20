@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[19]:
+# In[27]:
 
 from pylab import *
 import matplotlib.pyplot as plt
@@ -45,6 +45,18 @@ def poly_features1(x,D):
         X.append(x**i)
     F=asarray(X)
     F.shape=(D,1)
+    F=F.T
+    temp = shape(F)
+    temp = ones((temp[0],1))
+    F = concatenate((temp,F),1)
+    F=F.T
+    return(F)
+def poly_features_data(x,D):
+    X=[]
+    for i in range(1,D+1):
+        X.append(x**i)
+    F=asarray(X)
+    F.shape=(D,6)
     F=F.T
     temp = shape(F)
     temp = ones((temp[0],1))
@@ -120,8 +132,8 @@ def main():
     s = 'D = ' + str(deg[a])
     plt.suptitle(s,fontsize=15)
     #plt.scatter(X_test,y_test, s = 30,color = 'y')
-    F_train = poly_features(X_train,deg[a])
-    w_train = dot(linalg.pinv(dot(F_train,F_train.T)),dot(F_train,y_train))
+    F = poly_features_data(x,deg[a])
+    w = dot(linalg.pinv(dot(F,F.T)),dot(F,y))
     if a<2:
         n=0
         m=a
@@ -132,9 +144,9 @@ def main():
     s.shape = (size(s),1)
     f = []
     for k in range(1,deg[a]+1):
-        f.append(w_train[k]*s**k)
+        f.append(w[k]*s**k)
     f = asarray(f)
-    f = sum(f,axis = 0) + w_train[0]
+    f = sum(f,axis = 0) + w[0]
     plt.plot(s,f,'-r', linewidth = 2)
     show()
 main()
